@@ -10,12 +10,22 @@ set(CMAKE_CXX_EXTENSIONS OFF)  # Только стандартные функц�
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # Собрать исполняемый файл из src/
+# Глобальный поиск всех .cpp в src/
 file(GLOB_RECURSE PROJECT_SOURCES
     "${PROJECT_SOURCE_DIR}/src/*.cpp"
 )
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+# Если есть .cpp файлы, создаём таргет, иначе предупреждаем
+if(PROJECT_SOURCES)
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+else()
+    message(WARNING "No source files found in src/, please add at least one .cpp stub (e.g., main.cpp) to src/.")
+endif()
 
-# Настройка тестов (опционально, будет доработана)
-enable_testing()
-add_subdirectory(tests)
+# Настройка тестов (опционально, будет доработана) (опционально, будет доработана)
+# Проверка на существование CMakeLists.txt в tests
+if(EXISTS "${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt")
+    add_subdirectory(tests)
+else()
+    message(WARNING "Directory tests/ exists but no CMakeLists.txt found. Skipping tests.")
+endif()
