@@ -26,5 +26,9 @@ namespace PipeCompute {
 		std::vector<PointResult> result_; // результат симул€ции
 
 		void simulateSegment(const Segment& seg, double& currentPressure, double& currentTemperature, double cumulativeLength);
+
+		double computeVelocity(double rho, double area) const;
+		double computeReynolds(double rho, double velocity, double diameter, double viscosity) const;
+		double computeNusselt(double Re, double Pr) const;
 	};
 }
