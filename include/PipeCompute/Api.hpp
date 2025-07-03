@@ -1,11 +1,11 @@
-#pragma once
+п»ї#pragma once
 #include "Types.hpp"
 #include "Params.hpp"
 #include "Results.hpp"
 
 namespace PipeCompute {
 	/**
-	* основные функции расчета гидравлики и теплообмена
+	* РѕСЃРЅРѕРІРЅС‹Рµ С„СѓРЅРєС†РёРё СЂР°СЃС‡РµС‚Р° РіРёРґСЂР°РІР»РёРєРё Рё С‚РµРїР»РѕРѕР±РјРµРЅР°
 	*/
 	void calculatePipe(const PipeParams& in, PipeResults& out);
 	void calculateBend(const BendParams& in, BendResults& out);

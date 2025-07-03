@@ -1,37 +1,37 @@
-#pragma once
+п»ї#pragma once
 #include <vector>
 #include "Types.hpp"
 
 namespace PipeCompute {
-	/** Описание одного сегмента трубы */
+	/** РћРїРёСЃР°РЅРёРµ РѕРґРЅРѕРіРѕ СЃРµРіРјРµРЅС‚Р° С‚СЂСѓР±С‹ */
 	struct Segment {
-		double x0, y0, z0; // координаты начала
-		double x1, y1, z1; // координаты конца
-		double diameter;   // диаметр, м
-		double wallThickness; // толщина стенки, м
+		double x0, y0, z0; // РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅР°С‡Р°Р»Р°
+		double x1, y1, z1; // РєРѕРѕСЂРґРёРЅР°С‚С‹ РєРѕРЅС†Р°
+		double diameter;   // РґРёР°РјРµС‚СЂ, Рј
+		double wallThickness; // С‚РѕР»С‰РёРЅР° СЃС‚РµРЅРєРё, Рј
 	};
 }
 
-/** Параметры для CalculatePipe */
+/** РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ CalculatePipe */
 struct PipeParams {
-	std::vector<Segment> segments; // сегменты трубы
-	MediumType medium; // тип среды
-	double temperature; // температура среды начальная, К
-	double pressure;    // давление начальное, Па
-	double massFlowRate; // массовый расход, кг/с
-	double ambientTemp; // температура окружающей среды, К
-	double step; // шаг дискретизации вдоль трубы, м
-	UnitSystem units; // система единиц измерения
+	std::vector<Segment> segments; // СЃРµРіРјРµРЅС‚С‹ С‚СЂСѓР±С‹
+	MediumType medium; // С‚РёРї СЃСЂРµРґС‹
+	double temperature; // С‚РµРјРїРµСЂР°С‚СѓСЂР° СЃСЂРµРґС‹ РЅР°С‡Р°Р»СЊРЅР°СЏ, Рљ
+	double pressure;    // РґР°РІР»РµРЅРёРµ РЅР°С‡Р°Р»СЊРЅРѕРµ, РџР°
+	double massFlowRate; // РјР°СЃСЃРѕРІС‹Р№ СЂР°СЃС…РѕРґ, РєРі/СЃ
+	double ambientTemp; // С‚РµРјРїРµСЂР°С‚СѓСЂР° РѕРєСЂСѓР¶Р°СЋС‰РµР№ СЃСЂРµРґС‹, Рљ
+	double step; // С€Р°Рі РґРёСЃРєСЂРµС‚РёР·Р°С†РёРё РІРґРѕР»СЊ С‚СЂСѓР±С‹, Рј
+	UnitSystem units; // СЃРёСЃС‚РµРјР° РµРґРёРЅРёС† РёР·РјРµСЂРµРЅРёСЏ
 };
 
-/** Параметры для CalculateBend */
+/** РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ CalculateBend */
 struct BendParams : PipeParams {
-	double bendAngle; // угол поворота, рад
-	double bendRadius; // радиус изгиба, м
+	double bendAngle; // СѓРіРѕР» РїРѕРІРѕСЂРѕС‚Р°, СЂР°Рґ
+	double bendRadius; // СЂР°РґРёСѓСЃ РёР·РіРёР±Р°, Рј
 };
 
-/** Параметры для calculateTee (разветвление) */
+/** РџР°СЂР°РјРµС‚СЂС‹ РґР»СЏ calculateTee (СЂР°Р·РІРµС‚РІР»РµРЅРёРµ) */
 struct TeeParams : PipeParams {
-	double branchAngle; // угол ветви, рад
-	double branchDiameter; // диаметр ветви, м
+	double branchAngle; // СѓРіРѕР» РІРµС‚РІРё, СЂР°Рґ
+	double branchDiameter; // РґРёР°РјРµС‚СЂ РІРµС‚РІРё, Рј
 };;

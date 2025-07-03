@@ -1,26 +1,26 @@
-#pragma once
+п»ї#pragma once
 #include <vector>
 #include <string>
 
 namespace PipeCompute {
-	/** Входные параметры для расчета термодинамики */
+	/** Р’С…РѕРґРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ РґР»СЏ СЂР°СЃС‡РµС‚Р° С‚РµСЂРјРѕРґРёРЅР°РјРёРєРё */
 	struct ThermoInput {
-		double temperature; // Температура, К
-		double pressure;    // Давление, Па
-		std::vector<std::pair<std::string, double>> composition; // Состав в виде  "название" - "концентрация" {"CH4", 0.95} и тп
+		double temperature; // РўРµРјРїРµСЂР°С‚СѓСЂР°, Рљ
+		double pressure;    // Р”Р°РІР»РµРЅРёРµ, РџР°
+		std::vector<std::pair<std::string, double>> composition; // РЎРѕСЃС‚Р°РІ РІ РІРёРґРµ  "РЅР°Р·РІР°РЅРёРµ" - "РєРѕРЅС†РµРЅС‚СЂР°С†РёСЏ" {"CH4", 0.95} Рё С‚Рї
 	};
 
-	/** Результаты расчета */
+	/** Р РµР·СѓР»СЊС‚Р°С‚С‹ СЂР°СЃС‡РµС‚Р° */
 	struct ThermoOutput {
-		double density; // Плотность, кг/м^3
-		double viscosity; // Вязкость, Па·с
-		double heatCapacity; // Удельная теплоемкость, Дж/(кг·К)
-		double zFactor; // Фактор сжимаемости
-		double enthalpy; // Энтальпия, Дж/кг
-		double entropy; // Энтропия, Дж/(кг·К)
+		double density; // РџР»РѕС‚РЅРѕСЃС‚СЊ, РєРі/Рј^3
+		double viscosity; // Р’СЏР·РєРѕСЃС‚СЊ, РџР°В·СЃ
+		double heatCapacity; // РЈРґРµР»СЊРЅР°СЏ С‚РµРїР»РѕРµРјРєРѕСЃС‚СЊ, Р”Р¶/(РєРіВ·Рљ)
+		double zFactor; // Р¤Р°РєС‚РѕСЂ СЃР¶РёРјР°РµРјРѕСЃС‚Рё
+		double enthalpy; // Р­РЅС‚Р°Р»СЊРїРёСЏ, Р”Р¶/РєРі
+		double entropy; // Р­РЅС‚СЂРѕРїРёСЏ, Р”Р¶/(РєРіВ·Рљ)
 	};
 
-	/** Абстрактный интерфейс (базовый класс) */
+	/** РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ (Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ) */
 	class ThermoProperties {
 	public:
 		virtual ~ThermoProperties() = default;
