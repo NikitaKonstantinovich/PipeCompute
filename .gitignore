@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.opendb
+
+# Build directories
+build/
+out/
+
+# Visual Studio Code settings
+.vscode/
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Logs and temporary files
+*.log
+*.tmp
