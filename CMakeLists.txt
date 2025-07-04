@@ -12,7 +12,7 @@ set(PROJECT_SOURCES
     src/MockThermo.cpp
     src/Pipe.cpp
     src/Bend.cpp
-    # src/Tee.cpp
+    src/Tee.cpp
 )
 
 # — Create the executable target

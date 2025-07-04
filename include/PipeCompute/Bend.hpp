@@ -34,7 +34,7 @@ namespace PipeCompute {
         double computeLocalLoss(double xi, double rho, double v) const;
     };
 
-    /// Свободная функция из API
+    ///  функция из API
     void calculateBend(const BendParams& in, BendResults& out);
 
 }
