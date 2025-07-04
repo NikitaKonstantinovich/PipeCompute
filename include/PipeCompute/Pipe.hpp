@@ -30,5 +30,6 @@ namespace PipeCompute {
 		double computeVelocity(double rho, double area) const;
 		double computeReynolds(double rho, double velocity, double diameter, double viscosity) const;
 		double computeNusselt(double Re, double Pr) const;
-	};
+		double computeFrictionFactor(double Re) const;
+	}
 }
