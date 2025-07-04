@@ -1,5 +1,6 @@
 ﻿#include "PipeCompute/Pipe.hpp"
 #include <cmath>
+#include <numbers>
 
 namespace PipeCompute {
 
@@ -25,7 +26,7 @@ namespace PipeCompute {
 
 		const double L = seg.length(); // длина сегмента
 		const double D = seg.diameter; // диаметр сегмента
-		const double area = M_PI * D * D / 4.0; // площадь поперечного сечения
+		const double area = std::numbers::pi * D * D / 4.0; // площадь поперечного сечения
 		const double step = settings_.step; // шаг дискретизации
 
 		int nSteps = static_cast<int>(std::ceil(L / step));  // Сколько шагов по этому сегменту
@@ -50,7 +51,15 @@ namespace PipeCompute {
 			double dp = f * (step / D) * (rho * v * v / 2.0);
 			currentPressure -= dp;
 
-			result_.push_back(PointResult{ pos, currentPressure, currentTemperature, velocity, Re, Nu });
+			// --- расчет теплообмена ---
+			// q' [Вт на метр] = U * (периметр трубы) * (T - Tamb)
+			double perimeter = std::numbers::pi * D;
+			double q_prime = settings_.heatTransferCoeff * perimeter * (currentTemperature - settings_.ambientTemperature);
+			// dT = - q' * dx / (mdot * cp)
+			double dT = -q_prime * step / (settings_.massFlowRate * tout.heatCapacity);
+			currentTemperature += dT;
+
+			result_.push_back(PointResult{ pos, currentPressure, currentTemperature, v, Re, Nu });
 
 		}
 	}

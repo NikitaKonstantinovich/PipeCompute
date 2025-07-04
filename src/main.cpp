@@ -1,40 +1,58 @@
-#include <iostream>
+п»ї#include <iostream>
+#include "PipeCompute/Params.hpp"
+#include "PipeCompute/Pipe.hpp"
 #include "PipeCompute/ThermoProperties.hpp"
 
-namespace PipeCompute {
-	// Временная реализация внутри main.cpp для тестирования
-	class MockThermo : public ThermoProperties {
-	public:
-		bool compute(const ThermoInput& in, ThermoOutput& out) const override {
-			const double T = in.temperature;
-			out.density = 1.2 * (273.15 / T); // Плотность воздуха при 20°C и 1 атм
-			out.viscosity = 1.81e-5; // Вязкость воздуха
-			out.heatCapacity = 1005; // Удельная теплоемкость воздуха при постоянном давлении
-			out.zFactor = 1.0; // Фактор сжимаемости для идеального газа
-			out.enthalpy = out.heatCapacity * (T - 273.15); // Энтальпия
-			out.entropy = out.heatCapacity * std::log(T / 273.15); // Энтропия
-			return true;
-		}
-	};
-}
+class MockThermo : public PipeCompute::ThermoProperties {
+public:
+	bool compute(const PipeCompute::ThermoInput& in, PipeCompute::ThermoOutput& out) const override {
+		double T = in.temperature;
+		out.density = 1.2 * (273.15 / T); // РџСЂРёРјРµСЂРЅР°СЏ РјРѕРґРµР»СЊ РґР»СЏ РІРѕР·РґСѓС…Р°
+		out.viscosity = 1.8e-5; // Р’СЏР·РєРѕСЃС‚СЊ РІРѕР·РґСѓС…Р°
+		out.heatCapacity = 1005; // РўРµРїР»РѕРµРјРєРѕСЃС‚СЊ РІРѕР·РґСѓС…Р°
+		out.zFactor = 1.0; // Р¤Р°РєС‚РѕСЂ СЃР¶РёРјР°РµРјРѕСЃС‚Рё
+		out.enthalpy = out.heatCapacity * (T - 273.15); // СЌРЅС‚Р°Р»СЊРїРёСЏ
+		out.entropy = out.heatCapacity * std::log(T / 273.15); // СЌРЅС‚СЂРѕРїРёСЏ
+		return true;
+	}
+};
 
 int main() {
-	PipeCompute::ThermoInput in;
-	in.temperature = 300; // 27°C
-	in.pressure = 1e5; // 1 атм
+	using namespace PipeCompute;
 
-	PipeCompute::ThermoOutput out;
-	PipeCompute::MockThermo thermo;
+	// --- 1. Р—Р°РґР°С‘Рј РѕРґРёРЅ СЃРµРіРјРµРЅС‚ РґР»РёРЅРѕР№ 10 Рј, D=0.1 Рј ---
+	Segment seg;
+	seg.x0 = seg.y0 = seg.z0 = 0.0;
+	seg.x1 = 10.0; seg.y1 = seg.z1 = 0.0;
+	seg.diameter = 0.1;      // 10 СЃРј
+	seg.wallThickness = 0.005; // 5 РјРј
 
-	if (thermo.compute(in, out)) {
-		std::cout << "Density: " << out.density << " kg/m^3\n";
-		std::cout << "Viscosity: " << out.viscosity << " Pa·s\n";
-		std::cout << "Heat Capacity: " << out.heatCapacity << " J/(kg·K)\n";
-		std::cout << "Z Factor: " << out.zFactor << "\n";
-		std::cout << "Enthalpy: " << out.enthalpy << " J/kg\n";
-		std::cout << "Entropy: " << out.entropy << " J/(kg·K)\n";
-	} else {
-		std::cerr << "Failed to compute thermodynamic properties.\n";
+	std::vector<Segment> segments = { seg };
+
+	// --- 2. РќР°СЃС‚СЂРѕР№РєРё СЃРёРјСѓР»СЏС†РёРё ---
+	PipeSettings settings;
+	settings.initialPressure = 2e5;    // 2 Р±Р°СЂ РІ РџР°
+	settings.initialTemperature = 300.0;  // 27 В°C РІ K
+	settings.massFlowRate = 0.1;    // 0.1 РєРі/СЃ
+	settings.ambientTemperature = 290.0;  // 17 В°C РІ K
+	settings.step = 1.0;    // С€Р°Рі 1 РјРµС‚СЂ
+	settings.heatTransferCoeff = 10.0;   // 10 Р’С‚/(РјВІВ·Рљ), РіСЂСѓР±Рѕ
+	settings.thermo = std::make_shared<MockThermo>();
+
+	// --- 3. Р—Р°РїСѓСЃРєР°РµРј СЃРёРјСѓР»СЏС†РёСЋ ---
+	Pipe pipe(segments, settings);
+	const auto& results = pipe.simulate();
+
+	// --- 4. РџРµС‡Р°С‚Р°РµРј РїСЂРѕС„РёР»СЊ РІРґРѕР»СЊ С‚СЂСѓР±С‹ ---
+	std::cout << "x (m)\t p (bar)\t T (В°C)\t v (m/s)\n";
+	for (const auto& pt : results) {
+		std::cout
+			<< pt.position << "\t"
+			<< pt.pressure / 1e5 << "\t"
+			<< pt.temperature - 273.15 << "\t"
+			<< pt.velocity
+			<< "\n";
 	}
+
 	return 0;
 }

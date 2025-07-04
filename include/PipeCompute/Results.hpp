@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include<vector>
-#include "Types.hpp"
+#include "PipeCompute/Types.hpp"
 
 namespace PipeCompute {
 	/** Результаты в одной точке вдоль трубы */
@@ -21,12 +21,12 @@ namespace PipeCompute {
 	};
 
 	/** Выход для CalculateBend */
-	struct BendResults : PipeResulats {
+	struct BendResults : PipeResults {
 		double localLoss; // локальные потери давления в изгибе, Па
 	};
 
 	/** Выход для CalculateTee */
 	struct TeeResults : PipeResults {
-		ddouble branchFlowRate; // расход в ответвлении, кг/с
+		double branchFlowRate; // расход в ответвлении, кг/с
 	};
 }

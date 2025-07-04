@@ -34,5 +34,5 @@ namespace PipeCompute {
 		double computeNusselt(double Re, double Pr) const;
 		double computeFrictionFactor(double Re) const;
 		double computeHeatFlux(double localT) const;
-	}
+	};
 }

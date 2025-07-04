@@ -1,31 +1,33 @@
 cmake_minimum_required(VERSION 3.15)
 project(PipeCompute VERSION 0.1 LANGUAGES CXX)
 
-# Используем C++20
+# — Use C++20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)  # Только стандартные функции, без расширений компилятора
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Пути к заголовкам
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# Собрать исполняемый файл из src/
-# Глобальный поиск всех .cpp в src/
-file(GLOB_RECURSE PROJECT_SOURCES
-    "${PROJECT_SOURCE_DIR}/src/*.cpp"
+# — List all source files explicitly
+set(PROJECT_SOURCES
+    src/main.cpp
+    src/MockThermo.cpp
+    src/Pipe.cpp
+    # src/Bend.cpp
+    # src/Tee.cpp
 )
 
-# Если есть .cpp файлы, создаём таргет, иначе предупреждаем
-if(PROJECT_SOURCES)
-    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
-else()
-    message(WARNING "No source files found in src/, please add at least one .cpp stub (e.g., main.cpp) to src/.")
-endif()
+# — Create the executable target
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
-# Настройка тестов (опционально, будет доработана) (опционально, будет доработана)
-# Проверка на существование CMakeLists.txt в tests
+# — Include headers
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+# — (Optional) Tests
+enable_testing()
 if(EXISTS "${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt")
     add_subdirectory(tests)
 else()
-    message(WARNING "Directory tests/ exists but no CMakeLists.txt found. Skipping tests.")
+    message(STATUS "No tests/CMakeLists.txt found, skipping tests.")
 endif()
