@@ -11,7 +11,7 @@ set(PROJECT_SOURCES
     src/main.cpp
     src/MockThermo.cpp
     src/Pipe.cpp
-    # src/Bend.cpp
+    src/Bend.cpp
     # src/Tee.cpp
 )
 
