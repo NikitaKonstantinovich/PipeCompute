@@ -1,18 +1,20 @@
-#pragma once
+п»ї#pragma once
 #include "PipeCompute/ThermoProperties.hpp"
-#include "PipeCompute/Params.hpp" // для Segment
-#include "PipeCompute/Results.hpp" // для PipeResult
+#include "PipeCompute/Params.hpp" // РґР»СЏ Segment
+#include "PipeCompute/Results.hpp" // РґР»СЏ PipeResult
 #include <memory>
 #include <vector>
 
 namespace PipeCompute {
 	struct PipeSettings {
-		double initialPressure; // начальное давление, Па
-		double initialTemperature; // начальная температура, К
-		double massFlowRate; // массовый расход, кг/с
-		double ambientTemperature; // температура окружающей среды, К
-		double step; // шаг дискретизации вдоль трубы, м
-		std::shared_ptr<ThermoProperties> thermo; // модель термодинамических свойств
+		double initialPressure; // РЅР°С‡Р°Р»СЊРЅРѕРµ РґР°РІР»РµРЅРёРµ, РџР°
+		double initialTemperature; // РЅР°С‡Р°Р»СЊРЅР°СЏ С‚РµРјРїРµСЂР°С‚СѓСЂР°, Рљ
+		double massFlowRate; // РјР°СЃСЃРѕРІС‹Р№ СЂР°СЃС…РѕРґ, РєРі/СЃ
+		double ambientTemperature; // С‚РµРјРїРµСЂР°С‚СѓСЂР° РѕРєСЂСѓР¶Р°СЋС‰РµР№ СЃСЂРµРґС‹, Рљ
+		double step; // С€Р°Рі РґРёСЃРєСЂРµС‚РёР·Р°С†РёРё РІРґРѕР»СЊ С‚СЂСѓР±С‹, Рј
+		std::shared_ptr<ThermoProperties> thermo; // РјРѕРґРµР»СЊ С‚РµСЂРјРѕРґРёРЅР°РјРёС‡РµСЃРєРёС… СЃРІРѕР№СЃС‚РІ
+
+		double heatTransferCoeff; // РєРѕСЌС„С„РёС†РёРµРЅС‚ С‚РµРїР»РѕРѕС‚РґР°С‡Рё U, Р’С‚/(РјВІВ·Рљ)
 	};
 
 	class Pipe {
@@ -21,9 +23,9 @@ namespace PipeCompute {
 		const std::vector<PointResult>& simulate();
 
 	private:
-		std::vector<Segment> segments_; // сегменты трубы
-		PipeSettings settings_; // настройки трубы
-		std::vector<PointResult> result_; // результат симуляции
+		std::vector<Segment> segments_; // СЃРµРіРјРµРЅС‚С‹ С‚СЂСѓР±С‹
+		PipeSettings settings_; // РЅР°СЃС‚СЂРѕР№РєРё С‚СЂСѓР±С‹
+		std::vector<PointResult> result_; // СЂРµР·СѓР»СЊС‚Р°С‚ СЃРёРјСѓР»СЏС†РёРё
 
 		void simulateSegment(const Segment& seg, double& currentPressure, double& currentTemperature, double cumulativeLength);
 
@@ -31,5 +33,6 @@ namespace PipeCompute {
 		double computeReynolds(double rho, double velocity, double diameter, double viscosity) const;
 		double computeNusselt(double Re, double Pr) const;
 		double computeFrictionFactor(double Re) const;
+		double computeHeatFlux(double localT) const;
 	}
 }

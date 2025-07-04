@@ -80,4 +80,13 @@ namespace PipeCompute {
 			return 0.3164 / std::pow(Re, 0.25); // турбулентный режим
 		}
 	}
+
+	double Pipe::computeHeatFlux(double localT) const {
+		// q' = U * π * D * (T - Tamb)
+		// здесь U из настроек, D нужно передать извне или хранить перед вызовом
+		// сделаем параметром: settings_.heatTransferCoeff * perimeter * ΔT
+		// В simulateSegment будем вызывать с known D и localT
+		// поэтому прототип лучше: computeHeatFlux(double D, double localT)
+		return 0.0; // заглушка, реализацию чуть ниже перенесём inline
+	}
 }
