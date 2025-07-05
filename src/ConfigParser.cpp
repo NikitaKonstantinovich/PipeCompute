@@ -14,7 +14,13 @@ namespace PipeCompute {
         }
         nlohmann::json j;
         try {
-            in >> j;
+            // читаем из потока, игнорируя комментарии (ignore_comments = true)
+            j = nlohmann::json::parse(
+                in,
+                /*callback*/ nullptr,
+                /*allow_exceptions*/ true,
+                /*ignore_comments*/ true
+            );
         }
         catch (nlohmann::json::parse_error& ex) {
             // Выведем, на каком байте и почему парсер упал:
@@ -29,6 +35,24 @@ namespace PipeCompute {
         cfg.global.ambientTemperature = jg.at("ambientTemperature").get<double>();
         cfg.global.heatTransferCoeff = jg.at("heatTransferCoeff").get<double>();
         cfg.global.step = jg.at("step").get<double>();
+        cfg.global.initialPressure = jg.at("initialPressure").get<double>();
+        cfg.global.initialTemperature = jg.at("initialTemperature").get<double>();
+
+        auto jt = j.at("thermo");
+        std::string model = jt.value("model", "");
+        if (model == "ideal_gas") {
+            auto ig = std::make_unique<IdealGasConfig>();
+            ig->load(jt);
+            cfg.thermo = std::move(ig);
+        }
+        else if (model == "liquid") {
+            auto lf = std::make_unique<LiquidConfig>();
+            lf->load(jt);
+            cfg.thermo = std::move(lf);
+        }
+        else {
+            throw std::runtime_error("Unknown thermo.model: " + model);
+        }
 
         for (const auto& je : j.at("elements")) {
             ElementConfig e;

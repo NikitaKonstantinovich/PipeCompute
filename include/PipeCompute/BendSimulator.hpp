@@ -8,7 +8,7 @@
 namespace PipeCompute {
 
     /**
-     * @brief Симуляция колена (Bend)
+     *  Симуляция колена (Bend)
      * @param e         Описание элемента из конфига (bendAngle, bendRadius, diameter, wallThickness)
      * @param st        Текущее состояние потока (давление и температура): обновляется
      * @param settings  Общие настройки (massFlowRate, step)

@@ -4,56 +4,71 @@
 
 #include <nlohmann/json.hpp>
 #include "PipeCompute/ResultsExporter.hpp"
-
 #include "PipeCompute/ConfigParser.hpp"
+
 #include "PipeCompute/PipeSimulator.hpp"
 #include "PipeCompute/BendSimulator.hpp"
 #include "PipeCompute/TeeSimulator.hpp"
-#include "PipeCompute/ThermoProperties.hpp"
+
+#include "PipeCompute/IdealGasThermo.hpp"
+#include "PipeCompute/ConstantFluidThermo.hpp"
 
 using namespace PipeCompute;
 
-class MockThermo : public PipeCompute::ThermoProperties {
-public:
-    bool compute(const PipeCompute::ThermoInput& in, PipeCompute::ThermoOutput& out) const override {
-        double T = in.temperature;
-        out.density = 1.2 * (273.15 / T);       // Примерная модель для воздуха
-        out.viscosity = 1.8e-5;                   // Вязкость воздуха
-        out.heatCapacity = 1005;                    // Теплоёмкость воздуха
-        out.zFactor = 1.0;                     // Фактор сжимаемости
-        out.enthalpy = out.heatCapacity * (T - 273.15);
-        out.entropy = out.heatCapacity * std::log(T / 273.15);
-        return true;
-    }
-};
+//class MockThermo : public PipeCompute::ThermoProperties {
+//public:
+//    bool compute(const PipeCompute::ThermoInput& in, PipeCompute::ThermoOutput& out) const override {
+//        double T = in.temperature;
+//        out.density = 1.2 * (273.15 / T);       // Примерная модель для воздуха
+//        out.viscosity = 1.8e-5;                   // Вязкость воздуха
+//        out.heatCapacity = 1005;                    // Теплоёмкость воздуха
+//        out.zFactor = 1.0;                     // Фактор сжимаемости
+//        out.enthalpy = out.heatCapacity * (T - 273.15);
+//        out.entropy = out.heatCapacity * std::log(T / 273.15);
+//        return true;
+//    }
+//};
 
 int main(int argc, char** argv) {
-    // Выбираем конфиг: аргумент или дефолт
-    std::string cfgPath;
-    if (argc >= 2) {
-        cfgPath = argv[1];
-    }
-    else {
-        cfgPath = "configs/test.json";
-        std::cout << "No config argument provided; using default: " << cfgPath << "\n";
-    }
+    // 1) Выбор конфига
+    std::string cfgPath = (argc >= 2 ? argv[1] : "configs/test.json");
     std::cout << "Loading config from: " << cfgPath << "\n";
 
-    // Загружаем конфигурацию
-    PipeCompute::Config cfg = PipeCompute::ConfigParser::load(cfgPath);
+    // 2) Читаем JSON в Config, где thermo — unique_ptr<ThermoConfig>
+    Config cfg = ConfigParser::load(cfgPath);
 
+    // 3) Строим конкретную модель ThermoProperties на основании cfg.thermo->model
+    std::shared_ptr<ThermoProperties> thermo;
+    if (cfg.thermo->model == "ideal_gas") {
+        // приведение к IdealGasConfig
+        auto& ig = static_cast<IdealGasConfig&>(*cfg.thermo);
+        thermo = std::make_shared<IdealGasThermo>(
+            ig.molecularMass,
+            ig.universalGasConst,
+            ig.Cp,
+            ig.viscosity,
+            ig.thermalConductivity
+        );
+    }
+    else if (cfg.thermo->model == "liquid") {
+        auto& lf = static_cast<LiquidConfig&>(*cfg.thermo);
+        thermo = std::make_shared<ConstantFluidThermo>(
+            lf.density,
+            lf.Cp,
+            lf.viscosity,
+            lf.thermalConductivity,
+            lf.T0
+        );
+    }
+    else {
+        std::cerr << "Unsupported thermo.model: " << cfg.thermo->model << "\n";
+        return 1;
+    }
+
+    // 4) Подготовка остальных настроек
     nlohmann::json steps = nlohmann::json::array();
+    StreamState st{ cfg.global.initialPressure, cfg.global.initialTemperature };
 
-    // Модель термодинамики
-    auto thermo = std::make_shared<MockThermo>();
-
-    // Начальные условия (можно вынести в JSON)
-    double currentP = 2e5;   // Па
-    double currentT = 300.0; // K
-
-    StreamState st{ currentP, currentT };  // 2 bar, 27°C
-
-    // Общие настройки для Pipe
     PipeCompute::PipeSettings pipeSettings;
     pipeSettings.massFlowRate = cfg.global.massFlowRate;
     pipeSettings.ambientTemperature = cfg.global.ambientTemperature;
@@ -112,7 +127,9 @@ int main(int argc, char** argv) {
         {"massFlowRate",       cfg.global.massFlowRate},
         {"ambientTemperature", cfg.global.ambientTemperature},
         {"step",               cfg.global.step},
-        {"heatTransferCoeff",  cfg.global.heatTransferCoeff}
+        {"heatTransferCoeff",  cfg.global.heatTransferCoeff},
+        {"initialPressure",    cfg.global.initialPressure},  
+        {"initialTemperature", cfg.global.initialTemperature}
     };
     root["steps"] = std::move(steps);
 

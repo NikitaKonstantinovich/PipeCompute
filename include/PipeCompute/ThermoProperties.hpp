@@ -7,6 +7,7 @@ namespace PipeCompute {
 	struct ThermoInput {
 		double temperature; // Температура, К
 		double pressure;    // Давление, Па
+
 		std::vector<std::pair<std::string, double>> composition; // Состав в виде  "название" - "концентрация" {"CH4", 0.95} и тп
 	};
 
@@ -18,6 +19,7 @@ namespace PipeCompute {
 		double zFactor; // Фактор сжимаемости
 		double enthalpy; // Энтальпия, Дж/кг
 		double entropy; // Энтропия, Дж/(кг·К)
+		double thermalConductivity; // теплопроводность, Вт/(м*К)
 	};
 
 	/** Абстрактный интерфейс (базовый класс) */

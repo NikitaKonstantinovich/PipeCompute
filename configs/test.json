@@ -3,12 +3,22 @@
     "massFlowRate": 0.1,
     "ambientTemperature": 290.0,
     "heatTransferCoeff": 10.0,
-    "step": 1.0
+    "step": 1.0,
+    "initialPressure": 200000.0,
+    "initialTemperature": 300.0
+  },
+  "thermo": {
+    "model": "ideal_gas",
+    "molecularMass": 0.029,
+    "universalGasConst": 8.314,
+    "Cp": 1005.0,
+    "viscosity": 1.8e-5,
+    "thermalConductivity": 0.026
   },
   "elements": [
     {
       "type": "pipe",
-      "length": 10.0,
+      "length": 100.0,
       "diameter": 0.1,
       "wallThickness": 0.005
     },
@@ -21,7 +31,7 @@
     },
     {
       "type": "pipe",
-      "length": 2.0,
+      "length": 2000.0,
       "diameter": 0.1,
       "wallThickness": 0.005
     },
@@ -40,9 +50,9 @@
     },
     {
       "type": "tee",
-      "diameter": 0.10, 
-      "mainBranchDiameter": 0.10, 
-      "sideBranchDiameter": 0.05, 
+      "diameter": 0.10,
+      "mainBranchDiameter": 0.10,
+      "sideBranchDiameter": 0.05,
       "wallThickness": 0.005
     },
     {

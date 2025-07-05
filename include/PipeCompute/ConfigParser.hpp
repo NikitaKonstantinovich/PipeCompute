@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "PipeCompute/Params.hpp"
+#include "PipeCompute/ThermoConfig.hpp"
 #include <vector>
 #include <string>
 
@@ -11,6 +12,9 @@ namespace PipeCompute {
 		double heatTransferCoeff = 0.0; // Коэффициент теплоотдачи, Вт/(м²·К)
 		double ambientTemperature = 0.0; // Температура окружающей среды, K
 		double step = 1.0; // Шаг расчета, м
+
+		double initialPressure; // Pa
+		double initialTemperature; // K
 	};
 
 	/** Описание одного элемента трубопровода из конфига */
@@ -34,6 +38,7 @@ namespace PipeCompute {
 	/** Общая структура: глобальные настройки + список элементов */
 	struct Config {
 		GlobalSettings global; // Глобальные настройки
+		std::unique_ptr<ThermoConfig> thermo; // термодинамическая модель
 		std::vector<ElementConfig> elements; // Список элементов трубопровода
 	};
 
