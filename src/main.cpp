@@ -5,6 +5,7 @@
 #include "PipeCompute/ConfigParser.hpp"
 #include "PipeCompute/PipeSimulator.hpp"
 #include "PipeCompute/BendSimulator.hpp"
+#include "PipeCompute/TeeSimulator.hpp"
 #include "PipeCompute/Params.hpp"
 #include "PipeCompute/Pipe.hpp"
 #include "PipeCompute/Bend.hpp"
@@ -68,37 +69,7 @@ int main(int argc, char** argv) {
             simulateBend(e, st, pipeSettings, thermo);
         }
         else if (e.type == "tee") {
-            PipeCompute::TeeParams tp;
-            PipeCompute::Segment trunk{ 0,0,0,0,0,0, e.diameter, e.wallThickness };
-            tp.segments = { trunk };
-            tp.branchDiameter = e.branchDiameter;
-            tp.pressure = currentP;
-            tp.temperature = currentT;
-            tp.massFlowRate = pipeSettings.massFlowRate;
-            tp.step = pipeSettings.step;
-
-            PipeCompute::Tee tee(tp, thermo);
-            auto tr = tee.simulate();
-            currentP = tr.points[0].pressure;
-            std::cout << "[tee] branchD=" << e.branchDiameter
-                << "  Δp=" << tr.totalPressureDrop / 1e5 << " bar"
-                << "  m_branch=" << tr.branchFlowRate << " kg/s"
-                << "  p_main=" << currentP / 1e5 << " bar\n";
-
-            for (int i = 0; i < 2; ++i) {
-                PipeCompute::Segment branch{ 0,0,0,0,0,0,
-                                           (i == 0 ? e.diameter : e.branchDiameter),
-                                           e.wallThickness };
-                branch.x1 = 2.0;
-
-                pipeSettings.initialPressure = currentP;
-                pipeSettings.initialTemperature = currentT;
-                PipeCompute::Pipe branchPipe({ branch }, pipeSettings);
-                auto brRes = branchPipe.simulate();
-
-                std::cout << "[branch" << (i + 1) << "] length=2"
-                    << "  p=" << brRes.back().pressure / 1e5 << " bar\n";
-            }
+            simulateTee(e, st, pipeSettings, thermo);
         }
         else {
             std::cerr << "Unknown element type: " << e.type << "\n";
