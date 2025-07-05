@@ -1,6 +1,7 @@
 #include "PipeCompute/ConfigParser.hpp"
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <iostream>
 
 using json = nlohmann::json;
 
@@ -11,7 +12,16 @@ namespace PipeCompute {
         if (!in.is_open()) {
             throw std::runtime_error("Cannot open config file: " + jsonPath);
         }
-        json j; in >> j;
+        nlohmann::json j;
+        try {
+            in >> j;
+        }
+        catch (nlohmann::json::parse_error& ex) {
+            // Выведем, на каком байте и почему парсер упал:
+            std::cerr << "JSON parse error at byte " << ex.byte
+                << ": " << ex.what() << "\n";
+            throw;  // пробрасываем дальше
+        }
 
         Config cfg;
         auto jg = j.at("global");
@@ -38,9 +48,9 @@ namespace PipeCompute {
                 e.wallThickness = je.value("wallThickness", 0.0);
             }
             else if (e.type == "tee") {
-                e.branchDiameter = je.at("branchDiameter").get<double>();
-                // тоже имеет основное сечение трубы:
-                e.diameter = je.value("diameter", 0.0);
+                e.diameter = je.at("diameter").get<double>();
+                e.mainBranchDiameter = je.at("mainBranchDiameter").get<double>();
+                e.sideBranchDiameter = je.at("sideBranchDiameter").get<double>();
                 e.wallThickness = je.value("wallThickness", 0.0);
             }
             else {

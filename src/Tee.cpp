@@ -26,7 +26,7 @@ namespace PipeCompute {
         double D1 = params_.segments[0].diameter;
         double A1 = std::numbers::pi * D1 * D1 / 4.0;
         // Площадь ответвления
-        double D2 = params_.branchDiameter;
+        double D2 = params_.segments[1].diameter;
         double A2 = std::numbers::pi * D2 * D2 / 4.0;
 
         // --- 3. Разделяем расход по площадям ---
@@ -50,15 +50,25 @@ namespace PipeCompute {
         double p_out = p_in - dp;                     // Давление после тройника
 
         // --- 7. Формируем результат ---
-        // Единственная точка: position = 0 (тройник не разбивается на длину)
+        // Две точки: [0] — для магистрали, [1] — для ответвления.
+        // 1) Магистраль (main branch)
         res.points.push_back(PointResult{
-            0.0,                // позиция вдоль "длины" тройника
-            p_out,              // выходное давление, Па
-            T_in,               // выходная температура, K (без теплопотерь)
-            v1,                 // скорость основного потока, м/с
-            rho * v1 * D1 / tout.viscosity, // Re = ρ v D / μ
-            0.0                 // Nusselt не считаем здесь
-            });
+            0.0,                           // позиция вдоль тройника (условно 0)
+            p_out,                         // давление после тройника
+            T_in,                          // температура
+            v1,                            // скорость магистрали
+            rho * v1 * D1 / tout.viscosity,// Re магистрали
+            0.0                            // Nusselt (не считаем)
+        });
+        // 2) Ответвление (side branch)
+        res.points.push_back(PointResult{
+            0.0,                           // та же позиция
+            p_out,                         // давление ответвления (без дополнительной потери)
+            T_in,                          // температура та же
+            v2,                            // скорость ответвления
+            rho * v2 * D2 / tout.viscosity,// Re ответвления
+            0.0                            // Nusselt
+        });
 
         res.branchFlowRate = mdot2;   // расход в ответвлении, кг/с
         res.totalPressureDrop = dp;     // общее падение давления, Pa

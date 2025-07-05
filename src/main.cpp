@@ -2,14 +2,13 @@
 #include <string>
 #include <memory>
 
+#include <nlohmann/json.hpp>
+#include "PipeCompute/ResultsExporter.hpp"
+
 #include "PipeCompute/ConfigParser.hpp"
 #include "PipeCompute/PipeSimulator.hpp"
 #include "PipeCompute/BendSimulator.hpp"
 #include "PipeCompute/TeeSimulator.hpp"
-#include "PipeCompute/Params.hpp"
-#include "PipeCompute/Pipe.hpp"
-#include "PipeCompute/Bend.hpp"
-#include "PipeCompute/Tee.hpp"
 #include "PipeCompute/ThermoProperties.hpp"
 
 using namespace PipeCompute;
@@ -43,6 +42,8 @@ int main(int argc, char** argv) {
     // Загружаем конфигурацию
     PipeCompute::Config cfg = PipeCompute::ConfigParser::load(cfgPath);
 
+    nlohmann::json steps = nlohmann::json::array();
+
     // Модель термодинамики
     auto thermo = std::make_shared<MockThermo>();
 
@@ -64,17 +65,60 @@ int main(int argc, char** argv) {
     for (auto const& e : cfg.elements) {
         if (e.type == "pipe") {
             simulatePipe(e, st, pipeSettings);
+            steps.push_back({
+                {"type", "pipe"},
+                {"length", e.length},
+                {"pressure", st.pressure},
+                {"temperature", st.temperature}
+             });
         }
         else if (e.type == "bend") {
             simulateBend(e, st, pipeSettings, thermo);
+            steps.push_back({
+                {"type",        "bend"},
+                {"angle_rad",   e.bendAngle},
+                {"pressure_Pa", st.pressure}
+            });
         }
         else if (e.type == "tee") {
-            simulateTee(e, st, pipeSettings, thermo);
+            TeeResult teeResult = simulateTee(e, st, pipeSettings, thermo);
+
+            steps.push_back({
+                {"type", "tee"},
+                {"diameter_m", e.diameter},
+                {"mainBranchDiameter_m", e.mainBranchDiameter},
+                {"sideBranchDiameter_m", e.sideBranchDiameter},
+                {"dP_Tee_Pa",      teeResult.dP}
+            });
+            steps.push_back({
+                {"type",          "main_branch"},
+                {"pressure_Pa",   teeResult.main.pressure},
+                {"temperature_K", teeResult.main.temperature}
+            });
+            steps.push_back({
+                {"type",          "side_branch"},
+                {"pressure_Pa",   teeResult.side.pressure},
+                {"temperature_K", teeResult.side.temperature},
+                {"flowRate_kg_s", teeResult.sideFlow}
+            });
         }
         else {
             std::cerr << "Unknown element type: " << e.type << "\n";
         }
     }
+
+    nlohmann::json root;
+    root["global"] = {
+        {"massFlowRate",       cfg.global.massFlowRate},
+        {"ambientTemperature", cfg.global.ambientTemperature},
+        {"step",               cfg.global.step},
+        {"heatTransferCoeff",  cfg.global.heatTransferCoeff}
+    };
+    root["steps"] = std::move(steps);
+
+    const std::string outPath = "results.json";
+    writeJson(root, outPath);
+    std::cout << "Results exported to " << outPath << "\n";
 
     return 0;
 }

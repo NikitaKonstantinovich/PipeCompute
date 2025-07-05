@@ -27,7 +27,8 @@ namespace PipeCompute {
 		double bendRadius = 0.0; // Радиус изгиба для "bend", м
 
 		/** Tee */
-		double branchDiameter = 0.0; // Диаметр ответвления
+		double mainBranchDiameter = 0.0; // Диаметр main ответвления
+		double sideBranchDiameter = 0.0; // Диаметр side ответвления
 	};
 
 	/** Общая структура: глобальные настройки + список элементов */

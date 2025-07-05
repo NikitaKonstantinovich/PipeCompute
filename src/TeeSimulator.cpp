@@ -3,46 +3,45 @@
 
 namespace PipeCompute {
 
-    void simulateTee(const ElementConfig& e, StreamState& st, const PipeSettings& settings,
+    TeeResult simulateTee(const ElementConfig& e, StreamState& st, const PipeSettings& settings,
         std::shared_ptr<ThermoProperties> thermo) {
 
         // 1) Настраиваем параметры тройника
-        Segment trunk{ 0,0,0, 0,0,0, e.diameter, e.wallThickness };
+        Segment trunkStub{ 0,0,0, 0,0,0, e.mainBranchDiameter, e.wallThickness };
+        Segment sideStub{ 0,0,0, 0,0,0, e.sideBranchDiameter, e.wallThickness };
+
         TeeParams tp;
-        tp.segments = { trunk };
-        tp.branchDiameter = e.branchDiameter;
+        tp.segments = { trunkStub, sideStub };
+        tp.sideBranchDiameter = e.sideBranchDiameter;
         tp.pressure = st.pressure;
         tp.temperature = st.temperature;
         tp.massFlowRate = settings.massFlowRate;
         tp.step = settings.step;
 
         // 2) Прогоняем Tee
-        Tee tee(tp, thermo);
-        auto tr = tee.simulate();
+        auto tr = Tee(tp, thermo).simulate();
 
-        // 3) Обновляем главное давление
-        st.pressure = tr.points[0].pressure;
+        // 3) Собираем результат:
+        //    - главная ветвь: первая точка tr.points[0]
+        //    - побочная: используем tr.branchFlowRate и tr.points[1] (если есть)
+        StreamState mainSt{ tr.points[0].pressure, tr.points[0].temperature };
+        StreamState sideSt{ tr.points[1].pressure, tr.points[1].temperature };
 
-        std::cout << "[tee] branchD=" << e.branchDiameter
-            << "  Δp=" << tr.totalPressureDrop / 1e5 << " bar"
-            << "  m_branch=" << tr.branchFlowRate << " kg/s"
-            << "  p_main=" << st.pressure / 1e5 << " bar\n";
+        double sideFlow = tr.branchFlowRate;      // расход в побочной
+        double dP = tr.totalPressureDrop;   // падение в Tee
 
-        // 4) Симуляция двух ветвей по 2 м каждая
-        for (int i = 0; i < 2; ++i) {
-            Segment branch{ 0,0,0, 0,0,0,
-                           (i == 0 ? e.diameter : e.branchDiameter),
-                           e.wallThickness };
-            branch.x1 = 2.0;
+        // 4) Логируем в консоль
+        std::cout << "[tee] main→ D=" << e.mainBranchDiameter
+            << "  p_main=" << mainSt.pressure / 1e5 << " bar"
+            << "  T_main=" << mainSt.temperature - 273.15 << " °C\n";
+        std::cout << "[tee] side→ D=" << e.sideBranchDiameter
+            << "  p_side=" << sideSt.pressure / 1e5 << " bar"
+            << "  T_side=" << sideSt.temperature - 273.15 << " °C"
+            << "  m_side=" << sideFlow << " kg/s\n";
 
-            PipeSettings bs = settings;
-            bs.initialPressure = st.pressure;
-            bs.initialTemperature = st.temperature;
-            Pipe branchPipe({ branch }, bs);
-            auto res = branchPipe.simulate();
+        // 5) Обновляем главное состояние, побочная «замораживается»
+        st = mainSt;
 
-            std::cout << "[branch" << (i + 1) << "] length=2"
-                << "  p=" << res.back().pressure / 1e5 << " bar\n";
-        }
+        return { mainSt, sideSt, sideFlow, dP };
     }
 }

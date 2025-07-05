@@ -40,8 +40,15 @@
     },
     {
       "type": "tee",
+      "diameter": 0.10, 
+      "mainBranchDiameter": 0.10, 
+      "sideBranchDiameter": 0.05, 
+      "wallThickness": 0.005
+    },
+    {
+      "type": "pipe",
+      "length": 2.0,
       "diameter": 0.1,
-      "branchDiameter": 0.05,
       "wallThickness": 0.005
     }
   ]

@@ -36,11 +36,12 @@ namespace PipeCompute {
 	struct BendParams : PipeParams {
 		double bendAngle; // угол поворота, рад
 		double bendRadius; // радиус изгиба, м
+
 	};
 
 	/** Параметры для calculateTee (разветвление) */
 	struct TeeParams : PipeParams {
-		double branchAngle; // угол ветви, рад
-		double branchDiameter; // диаметр ветви, м
+		double mainBranchDiameter; // диаметр основной ветви
+		double sideBranchDiameter; // диаметр второстепенной ветви
 	};
 }
