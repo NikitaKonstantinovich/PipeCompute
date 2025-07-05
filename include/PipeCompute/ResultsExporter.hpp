@@ -6,9 +6,14 @@
 
 namespace PipeCompute {
 	/**
-	 * @brief Сериализует JSON-объект в файл
 	 * @param j      JSON-объект
 	 * @param path   Путь к выходному файлу
 	 */
-	void writeJson(const nlohmann::json& j, const std::string& path);
+	void writeJson(const nlohmann::json& root, const std::string& path);
+
+	/**
+	 * Формирует CSV со строкой заголовков из всех ключей первого элемента "steps",
+	 * а затем по одному ряду на каждый элемент.
+	 */
+	void writeCsv(const nlohmann::json& root, const std::string& path);
 }

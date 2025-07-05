@@ -116,9 +116,13 @@ int main(int argc, char** argv) {
     };
     root["steps"] = std::move(steps);
 
-    const std::string outPath = "results.json";
-    writeJson(root, outPath);
-    std::cout << "Results exported to " << outPath << "\n";
+    const std::string jsonOut = "results.json";
+    writeJson(root, jsonOut);
+    std::cout << "Results exported to " << jsonOut << "\n";
+
+    const std::string csvOut = "results.csv";
+    writeCsv(root, csvOut);
+    std::cout << "Results exported to " << csvOut << "\n";
 
     return 0;
 }
