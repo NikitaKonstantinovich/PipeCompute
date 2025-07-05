@@ -17,7 +17,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 file(GLOB PROJECT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 # — создаём исполняемый target
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} "src/BendSimulator.cpp")
 
 # После того, как собран exe, скопировать папку configs/ рядом с ним
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

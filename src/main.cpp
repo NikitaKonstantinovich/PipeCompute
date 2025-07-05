@@ -4,6 +4,7 @@
 
 #include "PipeCompute/ConfigParser.hpp"
 #include "PipeCompute/PipeSimulator.hpp"
+#include "PipeCompute/BendSimulator.hpp"
 #include "PipeCompute/Params.hpp"
 #include "PipeCompute/Pipe.hpp"
 #include "PipeCompute/Bend.hpp"
@@ -64,22 +65,7 @@ int main(int argc, char** argv) {
             simulatePipe(e, st, pipeSettings);
         }
         else if (e.type == "bend") {
-            PipeCompute::BendParams bp;
-            PipeCompute::Segment stub{ 0,0,0,0,0,0, e.diameter, e.wallThickness };
-            bp.segments = { stub };
-            bp.bendAngle = e.bendAngle;
-            bp.bendRadius = e.bendRadius;
-            bp.pressure = currentP;
-            bp.temperature = currentT;
-            bp.massFlowRate = pipeSettings.massFlowRate;
-            bp.step = pipeSettings.step;
-
-            PipeCompute::Bend bend(bp, thermo);
-            auto br = bend.simulate();
-            currentP = br.points.back().pressure;
-            std::cout << "[bend] angle=" << e.bendAngle
-                << "  Δp=" << br.localLoss / 1e5 << " bar"
-                << "  p=" << currentP / 1e5 << " bar\n";
+            simulateBend(e, st, pipeSettings, thermo);
         }
         else if (e.type == "tee") {
             PipeCompute::TeeParams tp;
