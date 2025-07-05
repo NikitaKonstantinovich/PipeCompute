@@ -1,12 +1,16 @@
 ﻿#include <iostream>
 #include <string>
+#include <memory>
 
 #include "PipeCompute/ConfigParser.hpp"
+#include "PipeCompute/PipeSimulator.hpp"
 #include "PipeCompute/Params.hpp"
 #include "PipeCompute/Pipe.hpp"
 #include "PipeCompute/Bend.hpp"
 #include "PipeCompute/Tee.hpp"
 #include "PipeCompute/ThermoProperties.hpp"
+
+using namespace PipeCompute;
 
 class MockThermo : public PipeCompute::ThermoProperties {
 public:
@@ -44,6 +48,8 @@ int main(int argc, char** argv) {
     double currentP = 2e5;   // Па
     double currentT = 300.0; // K
 
+    StreamState st{ currentP, currentT };  // 2 bar, 27°C
+
     // Общие настройки для Pipe
     PipeCompute::PipeSettings pipeSettings;
     pipeSettings.massFlowRate = cfg.global.massFlowRate;
@@ -55,22 +61,7 @@ int main(int argc, char** argv) {
     // Последовательное выполнение элементов из конфига
     for (auto const& e : cfg.elements) {
         if (e.type == "pipe") {
-            PipeCompute::Segment seg;
-            seg.x0 = seg.y0 = seg.z0 = 0.0;
-            seg.x1 = e.length; seg.y1 = seg.z1 = 0.0;
-            seg.diameter = e.diameter;
-            seg.wallThickness = e.wallThickness;
-
-            pipeSettings.initialPressure = currentP;
-            pipeSettings.initialTemperature = currentT;
-            PipeCompute::Pipe pipe({ seg }, pipeSettings);
-            auto res = pipe.simulate();
-
-            currentP = res.back().pressure;
-            currentT = res.back().temperature;
-            std::cout << "[pipe] length=" << e.length
-                << "  p=" << currentP / 1e5 << " bar"
-                << "  T=" << currentT - 273.15 << " °C\n";
+            simulatePipe(e, st, pipeSettings);
         }
         else if (e.type == "bend") {
             PipeCompute::BendParams bp;
