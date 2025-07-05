@@ -1,0 +1,48 @@
+{
+  "global": {
+    "massFlowRate": 0.1,
+    "ambientTemperature": 290.0,
+    "heatTransferCoeff": 10.0,
+    "step": 1.0
+  },
+  "elements": [
+    {
+      "type": "pipe",
+      "length": 10.0,
+      "diameter": 0.1,
+      "wallThickness": 0.005
+    },
+    {
+      "type": "bend",
+      "angle": 1.5708,
+      "radius": 1.0,
+      "diameter": 0.1,
+      "wallThickness": 0.005
+    },
+    {
+      "type": "pipe",
+      "length": 2.0,
+      "diameter": 0.1,
+      "wallThickness": 0.005
+    },
+    {
+      "type": "bend",
+      "angle": 1.5708,
+      "radius": 1.0,
+      "diameter": 0.1,
+      "wallThickness": 0.005
+    },
+    {
+      "type": "pipe",
+      "length": 2.0,
+      "diameter": 0.1,
+      "wallThickness": 0.005
+    },
+    {
+      "type": "tee",
+      "diameter": 0.1,
+      "branchDiameter": 0.05,
+      "wallThickness": 0.005
+    }
+  ]
+}
