@@ -62,7 +62,7 @@ namespace PipeCompute {
                 e.length = je.at("length").get<double>();
                 e.diameter = je.at("diameter").get<double>();
                 e.wallThickness = je.value("wallThickness", 0.0); 
-				e.roughness = je.value("roughness", 0.0); 
+				e.roughness = je.value("roughness", 0.0);
                 
 				e.wallConductivity = je.value("wallConductivity", 50.0); // âò/(ì·Ê)
                 e.hOuter = je.value("hOuter", 10.0); // Âò/(ì?·Ê)
