@@ -73,7 +73,6 @@ int main(int argc, char** argv) {
     pipeSettings.massFlowRate = cfg.global.massFlowRate;
     pipeSettings.ambientTemperature = cfg.global.ambientTemperature;
     pipeSettings.step = cfg.global.step;
-    pipeSettings.heatTransferCoeff = cfg.global.heatTransferCoeff;
     pipeSettings.thermo = thermo;
 
     // Последовательное выполнение элементов из конфига
@@ -127,7 +126,6 @@ int main(int argc, char** argv) {
         {"massFlowRate",       cfg.global.massFlowRate},
         {"ambientTemperature", cfg.global.ambientTemperature},
         {"step",               cfg.global.step},
-        {"heatTransferCoeff",  cfg.global.heatTransferCoeff},
         {"initialPressure",    cfg.global.initialPressure},  
         {"initialTemperature", cfg.global.initialTemperature}
     };

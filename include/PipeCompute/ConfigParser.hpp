@@ -9,7 +9,6 @@ namespace PipeCompute {
 	/** Глобальные настройки расчета, общие для всех элементов */
 	struct GlobalSettings {
 		double massFlowRate = 0.0;  // Массовый расход, кг/с
-		double heatTransferCoeff = 0.0; // Коэффициент теплоотдачи, Вт/(м²·К)
 		double ambientTemperature = 0.0; // Температура окружающей среды, K
 		double step = 1.0; // Шаг расчета, м
 

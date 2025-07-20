@@ -14,7 +14,6 @@ namespace PipeCompute {
 		double step; // шаг дискретизации вдоль трубы, м
 		std::shared_ptr<ThermoProperties> thermo; // модель термодинамических свойств
 
-		double heatTransferCoeff; // коэффициент теплоотдачи U, Вт/(м²·К)
 	};
 
 	class Pipe {
@@ -32,7 +31,7 @@ namespace PipeCompute {
 		double computeVelocity(double rho, double area) const;
 		double computeReynolds(double rho, double velocity, double diameter, double viscosity) const;
 		double computeNusselt(double Re, double Pr) const;
-		double computeFrictionFactor(double Re) const;
+		double computeFrictionFactor(double Re, double diameter, double roughness) const;
 		double computeHeatFlux(double localT) const;
 	};
 }

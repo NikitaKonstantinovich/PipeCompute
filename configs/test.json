@@ -1,8 +1,7 @@
 {
   "global": {
-    "massFlowRate": 0.1,
+    "massFlowRate": 1.0,
     "ambientTemperature": 290.0,
-    "heatTransferCoeff": 10.0,
     "step": 1.0,
     "initialPressure": 200000.0,
     "initialTemperature": 400.0
@@ -19,54 +18,6 @@
     {
       "type": "pipe",
       "length": 1000.0,
-      "diameter": 0.1,
-      "wallThickness": 0.005,
-      "wallConductivity": 15.0,
-      "hOuter": 10.0,
-      "roughness": 1.5e-5
-    },
-    {
-      "type": "bend",
-      "angle": 1.5708,
-      "radius": 1.0,
-      "diameter": 0.1,
-      "wallThickness": 0.005
-    },
-    {
-      "type": "pipe",
-      "length": 2000.0,
-      "diameter": 0.1,
-      "wallThickness": 0.005,
-      "wallConductivity": 15.0,
-      "hOuter": 10.0,
-      "roughness": 1.5e-5
-    },
-    {
-      "type": "bend",
-      "angle": 1.5708,
-      "radius": 1.0,
-      "diameter": 0.1,
-      "wallThickness": 0.005
-    },
-    {
-      "type": "pipe",
-      "length": 2.0,
-      "diameter": 0.1,
-      "wallThickness": 0.005,
-      "wallConductivity": 15.0,
-      "hOuter": 10.0,
-      "roughness": 1.5e-5
-    },
-    {
-      "type": "tee",
-      "diameter": 0.10,
-      "mainBranchDiameter": 0.10,
-      "sideBranchDiameter": 0.05,
-      "wallThickness": 0.005
-    },
-    {
-      "type": "pipe",
-      "length": 2.0,
       "diameter": 0.1,
       "wallThickness": 0.005,
       "wallConductivity": 15.0,

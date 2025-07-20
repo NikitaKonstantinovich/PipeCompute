@@ -50,10 +50,7 @@ namespace PipeCompute {
 			double v = computeVelocity(rho, area);
 			double Re = computeReynolds(rho, v, D, tout.viscosity);
 			// расчет f по Хааланду c учетом шероховатости 
-			double relativeRoughness = seg.roughness / D; // относительная шероховатость
-			double termH = std::pow(relativeRoughness / 3.7, 1.11) + 6.9 / Re; // Хааланд
-			double inv_s = -1.8 * std::log10(termH); // логарифмический закон для f
-			double f = 1 / (inv_s * inv_s); // коэффициент трения
+			double f = computeFrictionFactor(Re, D, seg.roughness); // коэффициент трения
 
 			// потери давления на этом участке
 			double dp = f * (step / D) * (rho * v * v / 2.0);
@@ -86,7 +83,7 @@ namespace PipeCompute {
 			std::cout << "[pipe] x=" << pos << " m, p=" << currentPressure / 1e5 << " bar"
 				 << ", T=" << (currentTemperature - 273.15) << " °C\n";
 
-			std::cout << "v: " << computeVelocity(rho, area) << "m/s \n";
+			//std::cout << "v: " << computeVelocity(rho, area) << "m/s \n";
 
 			result_.push_back(PointResult{ pos, currentPressure, currentTemperature, v, Re, Nu });
 		}
@@ -110,11 +107,15 @@ namespace PipeCompute {
 		return 0.023 * std::pow(Re, 0.8) * std::pow(Pr, 0.33);
 	}
 
-	double Pipe::computeFrictionFactor(double Re) const {
+	double Pipe::computeFrictionFactor(double Re, double diameter, double roughness) const {
 		if (Re < 2300) {
 			return 64.0 / Re; // ламинарный режим
 		} else {
-			return 0.3164 / std::pow(Re, 0.25); // турбулентный режим
+			// турбулентный режим
+			double relR = roughness / diameter;
+			double term = std::pow(relR / 3.7, 1.11) + 6.9 / Re;
+			double inv_s = -1.8 * std::log10(term);
+			return 1.0 / (inv_s * inv_s);
 		}
 	}
 

@@ -33,7 +33,6 @@ namespace PipeCompute {
         auto jg = j.at("global");
         cfg.global.massFlowRate = jg.at("massFlowRate").get<double>();
         cfg.global.ambientTemperature = jg.at("ambientTemperature").get<double>();
-        cfg.global.heatTransferCoeff = jg.at("heatTransferCoeff").get<double>();
         cfg.global.step = jg.at("step").get<double>();
         cfg.global.initialPressure = jg.at("initialPressure").get<double>();
         cfg.global.initialTemperature = jg.at("initialTemperature").get<double>();
