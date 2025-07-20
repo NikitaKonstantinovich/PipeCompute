@@ -12,7 +12,6 @@ namespace PipeCompute {
         double heatCapacity;        // Cp, Дж/(кг·К)
         double viscosity;           // μ, Па·с
         double thermalConductivity; // λ, Вт/(м·К)
-        double T0;                  // опорная температура, K (для расчёта H, S)
 
         ConstantFluidThermo(double rho,
             double Cp_,
@@ -23,7 +22,6 @@ namespace PipeCompute {
             , heatCapacity(Cp_)
             , viscosity(mu)
             , thermalConductivity(lambda)
-            , T0(T0_)
         {}
 
         bool compute(const ThermoInput& in,
@@ -34,6 +32,7 @@ namespace PipeCompute {
             out.viscosity = viscosity;
             out.thermalConductivity = thermalConductivity;
             // H = Cp·(T–T0), S = Cp·ln(T/T0)
+            constexpr double T0 = 273.15;
             out.enthalpy = heatCapacity * (in.temperature - T0);
             out.entropy = heatCapacity * std::log(in.temperature / T0);
             return true;

@@ -15,23 +15,9 @@
 
 using namespace PipeCompute;
 
-//class MockThermo : public PipeCompute::ThermoProperties {
-//public:
-//    bool compute(const PipeCompute::ThermoInput& in, PipeCompute::ThermoOutput& out) const override {
-//        double T = in.temperature;
-//        out.density = 1.2 * (273.15 / T);       // Примерная модель для воздуха
-//        out.viscosity = 1.8e-5;                   // Вязкость воздуха
-//        out.heatCapacity = 1005;                    // Теплоёмкость воздуха
-//        out.zFactor = 1.0;                     // Фактор сжимаемости
-//        out.enthalpy = out.heatCapacity * (T - 273.15);
-//        out.entropy = out.heatCapacity * std::log(T / 273.15);
-//        return true;
-//    }
-//};
-
 int main(int argc, char** argv) {
     // 1) Выбор конфига
-    std::string cfgPath = (argc >= 2 ? argv[1] : "configs/test.json");
+    std::string cfgPath = (argc >= 2 ? argv[1] : "configs/test_liquid.json");
     std::cout << "Loading config from: " << cfgPath << "\n";
 
     // 2) Читаем JSON в Config, где thermo — unique_ptr<ThermoConfig>
@@ -56,8 +42,7 @@ int main(int argc, char** argv) {
             lf.density,
             lf.Cp,
             lf.viscosity,
-            lf.thermalConductivity,
-            lf.T0
+            lf.thermalConductivity
         );
     }
     else {

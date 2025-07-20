@@ -83,7 +83,7 @@ namespace PipeCompute {
 			std::cout << "[pipe] x=" << pos << " m, p=" << currentPressure / 1e5 << " bar"
 				 << ", T=" << (currentTemperature - 273.15) << " °C\n";
 
-			//std::cout << "v: " << computeVelocity(rho, area) << "m/s \n";
+			std::cout << "v: " << computeVelocity(rho, area) << "m/s \n";
 
 			result_.push_back(PointResult{ pos, currentPressure, currentTemperature, v, Re, Nu });
 		}

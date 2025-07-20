@@ -1,0 +1,27 @@
+{
+  "global": {
+    "massFlowRate": 1.0,             
+    "ambientTemperature": 293.15,    
+    "step": 1.0,                      
+    "initialPressure": 200000.0,      
+    "initialTemperature": 310   
+  },
+  "thermo": {
+    "model": "liquid",
+    "density": 998.2,                  
+    "Cp": 4181.3,                     
+    "viscosity": 0.001,             
+    "thermalConductivity": 0.6     
+  },
+  "elements": [
+    {
+      "type": "pipe",
+      "length": 100.0,                
+      "diameter": 0.032,             
+      "wallThickness": 0.0032,     
+      "roughness": 1.5e-6,            
+      "wallConductivity": 50.0,    
+      "hOuter": 10.0                   
+    }
+  ]
+}

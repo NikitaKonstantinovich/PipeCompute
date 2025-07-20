@@ -2,6 +2,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <iostream>
+#include <stdexcept>
 
 using json = nlohmann::json;
 

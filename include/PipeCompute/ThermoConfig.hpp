@@ -38,7 +38,6 @@ namespace PipeCompute {
         double Cp;
         double viscosity;
         double thermalConductivity;
-        double T0;
 
         LiquidConfig() { model = "liquid"; }
 
@@ -47,7 +46,6 @@ namespace PipeCompute {
             Cp = j.at("Cp").get<double>();
             viscosity = j.at("viscosity").get<double>();
             thermalConductivity = j.at("thermalConductivity").get<double>();
-            T0 = j.value("T0", 273.15);
         }
     };
 }
