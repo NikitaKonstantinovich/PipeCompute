@@ -25,12 +25,16 @@ namespace PipeCompute {
 
 	void Pipe::simulateSegment(const Segment& seg, double& currentPressure, double& currentTemperature, double cumulativeLength) {
 
+		const double g = 9.81; // ускорение свободного падения, м/с²
 		const double L = seg.length(); // длина сегмента
 		const double D = seg.diameter; // диаметр сегмента
 		const double area = std::numbers::pi * D * D / 4.0; // площадь поперечного сечения
 		const double step = settings_.step; // шаг дискретизации
 
 		int nSteps = static_cast<int>(std::ceil(L / step));  // Сколько шагов по этому сегменту
+
+		double dHTotal = seg.dz(); // перепад высоты в метрах
+		double dHStep = (nSteps > 0) ? dHTotal / nSteps : 0.0; // перепад высоты на шаг
 
 		for (int i = 0; i <= nSteps; ++i) {
 			// локальное смещение вдоль сегмента
@@ -53,7 +57,9 @@ namespace PipeCompute {
 			double f = computeFrictionFactor(Re, D, seg.roughness); // коэффициент трения
 
 			// потери давления на этом участке
-			double dp = f * (step / D) * (rho * v * v / 2.0);
+			double dp_f = f * (step / D) * (rho * v * v / 2.0);
+			double dp_h = rho * g * dHStep; // гидростатическое давление из-за высоты
+			double dp = dp_f + dp_h; // общее давление на шаге
 			currentPressure -= dp;
 
 			//теплообмен
@@ -81,7 +87,8 @@ namespace PipeCompute {
 			currentTemperature += dT;
 
 			std::cout << "[pipe] x=" << pos << " m, p=" << currentPressure / 1e5 << " bar"
-				 << ", T=" << (currentTemperature - 273.15) << " °C | Re: " << Re << " | dp :" << dp << "\n";
+				 << ", T=" << (currentTemperature - 273.15) << " °C | Re: " << Re << ", dp_fric=" << dp_f << " Pa"
+				<< ", dp_h=" << dp_h << " Pa\n";
 
 			std::cout << "v: " << computeVelocity(rho, area) << "m/s \n";
 

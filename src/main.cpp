@@ -17,7 +17,8 @@ using namespace PipeCompute;
 
 int main(int argc, char** argv) {
     // 1) Выбор конфига
-    std::string cfgPath = (argc >= 2 ? argv[1] : "configs/test_liquid.json");
+    //std::string cfgPath = (argc >= 2 ? argv[1] : "configs/test_liquid.json");
+    std::string cfgPath = (argc >= 2 ? argv[1] : "configs/test.json");
     std::cout << "Loading config from: " << cfgPath << "\n";
 
     // 2) Читаем JSON в Config, где thermo — unique_ptr<ThermoConfig>
@@ -63,10 +64,13 @@ int main(int argc, char** argv) {
     // Последовательное выполнение элементов из конфига
     for (auto const& e : cfg.elements) {
         if (e.type == "pipe") {
+			PipeCompute::Segment seg = makeSegment(e);
+
             simulatePipe(e, st, pipeSettings);
+
             steps.push_back({
                 {"type", "pipe"},
-                {"length", e.length},
+                {"length", seg.length()},
                 {"pressure", st.pressure},
                 {"temperature", st.temperature}
              });

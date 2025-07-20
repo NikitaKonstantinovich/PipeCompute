@@ -59,7 +59,16 @@ namespace PipeCompute {
             e.type = je.at("type").get<std::string>();
 
             if (e.type == "pipe") {
-                e.length = je.at("length").get<double>();
+                auto jStart = je.at("start");
+                e.start.x = jStart.at("x").get<double>();
+                e.start.y = jStart.at("y").get<double>();
+                e.start.z = jStart.at("z").get<double>();
+
+                auto jEnd = je.at("end");
+                e.end.x = jEnd.at("x").get<double>();
+                e.end.y = jEnd.at("y").get<double>();
+                e.end.z = jEnd.at("z").get<double>();
+
                 e.diameter = je.at("diameter").get<double>();
                 e.wallThickness = je.value("wallThickness", 0.0); 
 				e.roughness = je.value("roughness", 0.0);

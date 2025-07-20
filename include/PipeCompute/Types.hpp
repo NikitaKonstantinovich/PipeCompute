@@ -16,4 +16,8 @@ namespace PipeCompute {
 		SI,      // метрическая система (СИ)
 		Imperial,    // имперская система
 	};
+
+	struct Point3D {
+		double x{ 0 }, y{ 0 }, z{ 0 };
+	};
 }

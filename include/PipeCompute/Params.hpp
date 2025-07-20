@@ -6,8 +6,8 @@
 namespace PipeCompute {
 	/** Описание одного сегмента трубы */
 	struct Segment {
-		double x0, y0, z0; // координаты начала
-		double x1, y1, z1; // координаты конца
+		Point3D start; // начало сегмента
+		Point3D end;   // конец сегмента
 		double diameter;   // диаметр, м
 		double wallThickness; // толщина стенки, м
 		double roughness; // шероховатость стенки, м
@@ -16,10 +16,14 @@ namespace PipeCompute {
 
 		double length() const {
 			// расстояние между (x0,y0,z0) и (x1,y1,z1)
-			double dx = x1 - x0;
-			double dy = y1 - y0;
-			double dz = z1 - z0;
+			double dx = end.x - start.x;
+			double dy = end.y - start.y;
+			double dz = end.z - start.z;
 			return std::sqrt(dx * dx + dy * dy + dz * dz);
+		}
+
+		double dz() const {
+			return end.z - start.z;
 		}
 	};
 

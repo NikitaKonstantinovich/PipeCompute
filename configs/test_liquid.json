@@ -1,9 +1,9 @@
 {
   "global": {
-    "massFlowRate": 1.0,             
+    "massFlowRate": 1.5,             
     "ambientTemperature": 293.15,    
     "step": 1.0,                      
-    "initialPressure": 200000.0,      
+    "initialPressure": 300000.0,      
     "initialTemperature": 310   
   },
   "thermo": {
@@ -16,12 +16,91 @@
   "elements": [
     {
       "type": "pipe",
-      "length": 100.0,                
-      "diameter": 0.032,             
-      "wallThickness": 0.0032,     
-      "roughness": 1.5e-6,            
-      "wallConductivity": 50.0,    
-      "hOuter": 10.0                   
+      "start": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "diameter": 0.032,
+      "wallThickness": 0.0032,
+      "roughness": 1.5e-6,
+      "wallConductivity": 50.0,
+      "hOuter": 10.0
+    },
+    {
+      "type": "bend",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "angle": 1.5708,
+      "radius": 1.0,
+      "diameter": 0.032,
+      "wallThickness": 0.0032
+    },
+    {
+      "type": "pipe",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "diameter": 0.032,
+      "wallThickness": 0.0032,
+      "roughness": 1.5e-6,
+      "wallConductivity": 50.0,
+      "hOuter": 10.0
+    },
+    {
+      "type": "bend",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "angle": 1.5708,
+      "radius": 1.0,
+      "diameter": 0.032,
+      "wallThickness": 0.0032
+    },
+    {
+      "type": "pipe",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "end": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "diameter": 0.032,
+      "wallThickness": 0.0032,
+      "roughness": 1.5e-6,
+      "wallConductivity": 50.0,
+      "hOuter": 10.0
     }
   ]
 }

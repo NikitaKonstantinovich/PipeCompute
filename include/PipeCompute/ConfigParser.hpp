@@ -21,7 +21,8 @@ namespace PipeCompute {
 		std::string type; // Тип элемента: "pipe", "bend", "tee" 
 
 		/** Pipe */
-		double length = 0.0; // Длина элемента, м
+		Point3D start; // Начало сегмента (x0, y0, z0)
+		Point3D end; // Конец сегмента (x1, y1, z1)
 		double diameter = 0.0; // Диаметр, м
 		double wallThickness = 0.0; // Толщина стенки, м
 		double roughness = 0.0; // Шероховатость стенки, м

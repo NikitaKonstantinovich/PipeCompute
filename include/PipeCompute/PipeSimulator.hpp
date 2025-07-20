@@ -41,7 +41,7 @@ namespace PipeCompute {
         st.temperature = pr.temperature;
 
         // 5) Вывести результат
-        logPipeResult(e.length, pr);
+        logPipeResult(seg.length(), pr);
     }
 
 } 

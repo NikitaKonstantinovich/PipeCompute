@@ -1,6 +1,6 @@
 {
   "global": {
-    "massFlowRate": 1.0,
+    "massFlowRate": 5.0,
     "ambientTemperature": 290.0,
     "step": 1.0,
     "initialPressure": 200000.0,
@@ -17,12 +17,91 @@
   "elements": [
     {
       "type": "pipe",
-      "length": 1000.0,
-      "diameter": 0.1,
-      "wallThickness": 0.005,
-      "wallConductivity": 15.0,
-      "hOuter": 10.0,
-      "roughness": 1.5e-5
+      "start": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "diameter": 0.5,
+      "wallThickness": 0.0088,
+      "roughness": 1.5e-5,
+      "wallConductivity": 50.0,
+      "hOuter": 10.0
+    },
+    {
+      "type": "bend",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "angle": 1.5708,
+      "radius": 1.0,
+      "diameter": 0.5,
+      "wallThickness": 0.0088
+    },
+    {
+      "type": "pipe",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "diameter": 0.5,
+      "wallThickness": 0.0088,
+      "roughness": 1.5e-6,
+      "wallConductivity": 50.0,
+      "hOuter": 10.0
+    },
+    {
+      "type": "bend",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "end": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "angle": 1.5708,
+      "radius": 1.0,
+      "diameter": 0.5,
+      "wallThickness": 0.0088
+    },
+    {
+      "type": "pipe",
+      "start": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "end": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 5.0
+      },
+      "diameter": 0.5,
+      "wallThickness": 0.0088,
+      "roughness": 1.5e-6,
+      "wallConductivity": 50.0,
+      "hOuter": 10.0
     }
   ]
 }

@@ -5,9 +5,8 @@ namespace PipeCompute {
 
     Segment makeSegment(const ElementConfig& e) {
         Segment s{};
-        s.x0 = s.y0 = s.z0 = 0.0;
-        s.x1 = e.length;
-        s.y1 = s.z1 = 0.0;
+        s.start = e.start;
+        s.end = e.end;
         s.diameter = e.diameter;
         s.wallThickness = e.wallThickness;
         s.roughness = e.roughness;
@@ -27,5 +26,4 @@ namespace PipeCompute {
             << "  p=" << pr.pressure / 1e5 << " bar"
             << "  T=" << pr.temperature - 273.15 << " °C\n";
     }
-
 }
