@@ -11,7 +11,7 @@
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x64" ],
       "variables": [],
-      "commandArgs": "configs/test.json", // <-- здесь ваш относительный путь
+      "commandArgs": "configs/test.json", 
       "workingDirectory": "${projectDir}/out/build/${name}"
     }
   ]

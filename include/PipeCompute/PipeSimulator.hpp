@@ -44,4 +44,4 @@ namespace PipeCompute {
         logPipeResult(e.length, pr);
     }
 
-} // namespace PipeCompute
+} 

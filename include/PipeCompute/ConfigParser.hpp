@@ -25,6 +25,9 @@ namespace PipeCompute {
 		double length = 0.0; // Длина элемента, м
 		double diameter = 0.0; // Диаметр, м
 		double wallThickness = 0.0; // Толщина стенки, м
+		double roughness = 0.0; // Шероховатость стенки, м
+		double wallConductivity = 0.0; // Теплопроводность стенки, Вт/(м·К)
+		double hOuter = 0.0; // Коэффициент теплоотдачи снаружи, Вт/(м²·К)
 
 		/** Bend */
 		double bendAngle = 0.0; // Угол изгиба для "bend", радианы

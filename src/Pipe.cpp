@@ -1,6 +1,7 @@
 ﻿#include "PipeCompute/Pipe.hpp"
 #include <cmath>
 #include <numbers>
+#include <iostream>
 
 namespace PipeCompute {
 
@@ -41,26 +42,53 @@ namespace PipeCompute {
 			settings_.thermo->compute(tin, tout);
 
 			double rho = tout.density;
+			double mu = tout.viscosity;
+			double cp = tout.heatCapacity;
+			double kf = tout.thermalConductivity;
+
+			//гидравлика
 			double v = computeVelocity(rho, area);
 			double Re = computeReynolds(rho, v, D, tout.viscosity);
-			double Pr = tout.heatCapacity * tout.viscosity / 0.026;  //  λ=0.026
-			double Nu = computeNusselt(Re, Pr);
-			double f = computeFrictionFactor(Re);
+			// расчет f по Хааланду c учетом шероховатости 
+			double relativeRoughness = seg.roughness / D; // относительная шероховатость
+			double termH = std::pow(relativeRoughness / 3.7, 1.11) + 6.9 / Re; // Хааланд
+			double inv_s = -1.8 * std::log10(termH); // логарифмический закон для f
+			double f = 1 / (inv_s * inv_s); // коэффициент трения
 
 			// потери давления на этом участке
 			double dp = f * (step / D) * (rho * v * v / 2.0);
 			currentPressure -= dp;
 
-			// --- расчет теплообмена ---
-			// q' [Вт на метр] = U * (периметр трубы) * (T - Tamb)
-			double perimeter = std::numbers::pi * D;
-			double q_prime = settings_.heatTransferCoeff * perimeter * (currentTemperature - settings_.ambientTemperature);
-			// dT = - q' * dx / (mdot * cp)
-			double dT = -q_prime * step / (settings_.massFlowRate * tout.heatCapacity);
+			//теплообмен
+			
+				//Внутренний теплоперенос | Nu -> h_i
+			double Pr = cp * mu / kf;
+			double Nu = computeNusselt(Re, Pr);
+			double hi = Nu * kf / D; // коэффициент теплоотдачи внутри трубы
+
+				//геомеетрия стенки
+			double Ri = D / 2.0; // внутренний радиус трубы
+			double Ro = Ri + seg.wallThickness; // внешний радиус трубы
+
+				//сопротиление на 1 метр
+			double Ri_conv = 1.0 / (hi * 2.0 * std::numbers::pi * Ri); // внутреннее сопротивление
+			double R_wall = std::log(Ro / Ri) / (2.0 * std::numbers::pi * seg.wallConductivity); // сопротивление стенки
+			double Ro_conv = 1.0 / (seg.hOuter * 2.0 * std::numbers::pi * Ro); // внешнее сопротивление
+			double R_total = Ri_conv + R_wall + Ro_conv; // общее сопротивление
+
+				//тепловой поток на метр
+			double q_per_m = (currentTemperature - settings_.ambientTemperature) / R_total; // Вт/м
+
+				//изменение температуры на этом шаге
+			double dT = -q_per_m * step / (settings_.massFlowRate * cp); // изменение температуры
 			currentTemperature += dT;
 
-			result_.push_back(PointResult{ pos, currentPressure, currentTemperature, v, Re, Nu });
+			std::cout << "[pipe] x=" << pos << " m, p=" << currentPressure / 1e5 << " bar"
+				 << ", T=" << (currentTemperature - 273.15) << " °C\n";
 
+			std::cout << "v: " << computeVelocity(rho, area) << "m/s \n";
+
+			result_.push_back(PointResult{ pos, currentPressure, currentTemperature, v, Re, Nu });
 		}
 	}
 

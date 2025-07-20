@@ -61,7 +61,11 @@ namespace PipeCompute {
             if (e.type == "pipe") {
                 e.length = je.at("length").get<double>();
                 e.diameter = je.at("diameter").get<double>();
-                e.wallThickness = je.value("wallThickness", 0.0);  // необязательное поле
+                e.wallThickness = je.value("wallThickness", 0.0); 
+				e.roughness = je.value("roughness", 0.0); 
+                
+				e.wallConductivity = je.value("wallConductivity", 50.0); // вт/(м·К)
+                e.hOuter = je.value("hOuter", 10.0); // Вт/(м?·К)
             }
             else if (e.type == "bend") {
                 e.bendAngle = je.at("angle").get<double>();

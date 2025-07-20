@@ -10,6 +10,8 @@ namespace PipeCompute {
         s.y1 = s.z1 = 0.0;
         s.diameter = e.diameter;
         s.wallThickness = e.wallThickness;
+		s.wallConductivity = e.wallConductivity;
+		s.hOuter = e.hOuter;
         return s;
     }
 

@@ -10,6 +10,9 @@ namespace PipeCompute {
 		double x1, y1, z1; // координаты конца
 		double diameter;   // диаметр, м
 		double wallThickness; // толщина стенки, м
+		double roughness; // шероховатость стенки, м
+		double wallConductivity; // теплопроводность стенки, Вт/(м·К)
+		double hOuter; // коэффициент теплоотдачи снаружи, Вт/(м²·К)
 
 		double length() const {
 			// расстояние между (x0,y0,z0) и (x1,y1,z1)
