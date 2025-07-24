@@ -13,6 +13,8 @@ namespace PipeCompute {
 		double roughness; // шероховатость стенки, м
 		double wallConductivity; // теплопроводность стенки, Вт/(м·К)
 		double hOuter; // коэффициент теплоотдачи снаружи, Вт/(м²·К)
+		double insulationThickness; /// толщина теплоизоляйии, м
+		double insulationConductivity; // теплопроводность утеплителя, Вт/(м*К)
 
 		double length() const {
 			// расстояние между (x0,y0,z0) и (x1,y1,z1)

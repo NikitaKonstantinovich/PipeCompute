@@ -76,8 +76,12 @@ namespace PipeCompute {
 				//сопротиление на 1 метр
 			double Ri_conv = 1.0 / (hi * 2.0 * std::numbers::pi * Ri); // внутреннее сопротивление
 			double R_wall = std::log(Ro / Ri) / (2.0 * std::numbers::pi * seg.wallConductivity); // сопротивление стенки
-			double Ro_conv = 1.0 / (seg.hOuter * 2.0 * std::numbers::pi * Ro); // внешнее сопротивление
-			double R_total = Ri_conv + R_wall + Ro_conv; // общее сопротивление
+
+			double Ro_ins = Ro + seg.insulationThickness;
+			double R_ins = std::log(Ro_ins / Ro) / (2 * std::numbers::pi * seg.insulationConductivity);
+
+			double Ro_conv = 1.0 / (seg.hOuter * 2.0 * std::numbers::pi * Ro_ins); // внешнее сопротивление
+			double R_total = Ri_conv + R_wall + Ro_conv + R_ins; // общее сопротивление
 
 				//тепловой поток на метр
 			double q_per_m = (currentTemperature - settings_.ambientTemperature) / R_total; // Вт/м
@@ -87,8 +91,7 @@ namespace PipeCompute {
 			currentTemperature += dT;
 
 			std::cout << "[pipe] x=" << pos << " m, p=" << currentPressure / 1e5 << " bar"
-				 << ", T=" << (currentTemperature - 273.15) << " °C | Re: " << Re << ", dp_fric=" << dp_f << " Pa"
-				<< ", dp_h=" << dp_h << " Pa\n";
+				 << ", T=" << (currentTemperature - 273.15) << " °C\n";
 
 			std::cout << "v: " << computeVelocity(rho, area) << "m/s \n";
 
@@ -111,7 +114,7 @@ namespace PipeCompute {
 	}
 
 	double Pipe::computeNusselt(double Re, double Pr) const {
-		return 0.023 * std::pow(Re, 0.8) * std::pow(Pr, 0.33);
+		return 0.021 * std::pow(Re, 0.8) * std::pow(Pr, 0.43);
 	}
 
 	double Pipe::computeFrictionFactor(double Re, double diameter, double roughness) const {

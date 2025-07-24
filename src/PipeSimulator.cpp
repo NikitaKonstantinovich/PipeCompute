@@ -12,6 +12,8 @@ namespace PipeCompute {
         s.roughness = e.roughness;
 		s.wallConductivity = e.wallConductivity;
 		s.hOuter = e.hOuter;
+        s.insulationThickness = e.insulationThickness;
+        s.insulationConductivity = e.insulationConductivity;
         return s;
     }
 

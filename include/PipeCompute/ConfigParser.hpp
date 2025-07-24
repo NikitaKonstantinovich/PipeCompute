@@ -29,6 +29,9 @@ namespace PipeCompute {
 		double wallConductivity = 0.0; // Теплопроводность стенки, Вт/(м·К)
 		double hOuter = 0.0; // Коэффициент теплоотдачи снаружи, Вт/(м²·К)
 
+		double insulationThickness = 0.0; // толщина изоляционного слоя, м
+		double insulationConductivity = 0.0; // теплопроводность утеплителя, Вт/(м*К)
+
 		/** Bend */
 		double bendAngle = 0.0; // Угол изгиба для "bend", радианы
 		double bendRadius = 0.0; // Радиус изгиба для "bend", м

@@ -75,6 +75,9 @@ namespace PipeCompute {
                 
 				e.wallConductivity = je.value("wallConductivity", 50.0); // âò/(ì·Ê)
                 e.hOuter = je.value("hOuter", 10.0); // Âò/(ì?·Ê)
+
+                e.insulationThickness = je.value("insulationThickness", 0.01);
+                e.insulationConductivity = je.value("insulationConductivity", 0.05);
             }
             else if (e.type == "bend") {
                 e.bendAngle = je.at("angle").get<double>();
