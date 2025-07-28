@@ -1,6 +1,6 @@
 {
   "global": {
-    "massFlowRate": 55.0,
+    "massFlowRate": 5.5,
     "ambientTemperature": 283.0,
     "step": 1.0,
     "initialPressure": 2000000.0,
@@ -8,11 +8,11 @@
   },
   "thermo": {
     "model": "ideal_gas",
-    "molecularMass": 0.029,
+    "molecularMass": 0.016,
     "universalGasConst": 8.314,
-    "Cp": 1005.0,
-    "viscosity": 2.08e-5,
-    "thermalConductivity": 0.031
+    "Cp": 2200.0,
+    "viscosity": 1.2e-5,
+    "thermalConductivity": 0.022
   },
   "elements": [
     {
@@ -29,11 +29,11 @@
       },
       "diameter": 0.53,
       "wallThickness": 0.01,
-      "roughness": 1.5e-5,
-      "wallConductivity": 30.0,
+      "roughness": 4.572e-5,
+      "wallConductivity": 45.0,
       "hOuter": 8.0,
       "insulationThickness": 0.05,
-      "insulationConductivity": 0.03
+      "insulationConductivity": 0.018
     }
   ]
 }
